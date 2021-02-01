@@ -3,7 +3,7 @@
   "info": {
     "title": "Selling Partner API for Uploads",
     "description": "The Selling Partner API for Uploads provides operations that support uploading files.",
-    "version": "v1",
+    "version": "2020-11-01",
     "contact": {
       "name": "Selling Partner API Developer Support",
       "url": "https://sellercentral.amazon.com/gp/mws/contactus.html"
@@ -24,23 +24,19 @@
     "application/json"
   ],
   "paths": {
-    "/uploads/v1/uploadDestinations": {
+    "/uploads/2020-11-01/uploadDestinations/{resource}": {
       "post": {
-        "description": "Creates an upload destination and returns the required information to upload to that destination.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
-        "operationId": "createUploadDestination",
+        "description": "Creates an upload destination for a resource that you specify and returns the information required to upload to that destination.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "operationId": "createUploadDestinationForResource",
         "tags": [
           "uploads"
         ],
         "responses": {
           "201": {
-            "description": "Successfully created an upload destination.",
+            "description": "Success.",
             "headers": {
               "x-amzn-requestId": {
                 "description": "Unique request reference identifier.",
-                "type": "string"
-              },
-              "Location": {
-                "description": "The URI of the created destination.",
                 "type": "string"
               }
             },
@@ -163,18 +159,33 @@
             "type": "array",
             "in": "query",
             "required": true,
-            "description": "Marketplace identifiers. Specifies the marketplace where the upload will be available. NOTE: Accepts only a single marketplace.",
+            "description": "A list of marketplace identifiers. This specifies the marketplaces where the upload will be available. Only one marketplace can be specified.",
             "items": {
               "type": "string"
             },
             "maxItems": 1
           },
           {
-            "name": "Content-MD5",
+            "name": "contentMD5",
             "description": "An MD5 hash of the content to be submitted to the upload destination. This value is used to determine if the data has been corrupted or tampered with during transit.",
             "type": "string",
             "in": "query",
             "required": true
+          },
+          {
+            "name": "resource",
+            "in": "path",
+            "description": "The URL of the resource for the upload destination that you are creating. For example, to create an upload destination for a Buyer-Seller Messaging message, the {resource} would be /messaging and the path would be  /uploads/v1/uploadDestinations/messaging",
+            "required": true,
+            "type": "string",
+            "x-amazon-spds-greedy-path-parameter":true
+          },
+          {
+            "name": "contentType",
+            "in": "query",
+            "description": "The content type of the file to be uploaded.",
+            "required": false,
+            "type": "string"
           }
         ]
       }
@@ -198,47 +209,17 @@
       "type": "object",
       "properties": {
         "uploadDestinationId": {
-          "description": "The unique identifier to be used by APIs that reference the upload destination.",
+          "description": "The unique identifier for the upload destination.",
           "type": "string"
         },
         "url": {
-          "description": "The URL to which to upload the file.",
+          "description": "The URL for the upload destination.",
           "type": "string"
-        },
-        "encryptionDetails": {
-          "$ref": "#/definitions/EncryptionDetails"
         },
         "headers": {
           "description": "The headers to include in the upload request.",
           "type": "object",
           "properties": {}
-        }
-      }
-    },
-    "EncryptionDetails": {
-      "description": "Encryption details for the required client-side encryption of the upload.",
-      "type": "object",
-      "properties": {
-        "standard": {
-          "description": "The encryption standard required prior to upload.",
-          "type": "string",
-          "enum": [
-            "AES"
-          ],
-          "x-docgen-enum-table-extension": [
-            {
-              "value": "AES",
-              "description": "AES"
-            }
-          ]
-        },
-        "initializationVector": {
-          "type": "string",
-          "description": "The vector to encrypt the content using Cipher Block Chaining (CBC)."
-        },
-        "key": {
-          "type": "string",
-          "description": "The encryption key used to encrypt the content."
         }
       }
     },

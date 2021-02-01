@@ -26,14 +26,18 @@
   "paths": {
     "/messaging/v1/orders/{amazonOrderId}": {
       "get": {
-        "description": "Returns a list of message types that are available for an order that you specify. A message type is represented by an actions object, which contains a path and query parameter(s). You can use the path and parameter(s) to call an operation that sends a message.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Returns a list of message types that are available for an order that you specify. A message type is represented by an actions object, which contains a path and query parameter(s). You can use the path and parameter(s) to call an operation that sends a message.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "getMessagingActionsForOrder",
         "tags": ["messaging"],
         "responses": {
           "200": {
             "description": "Returns hypermedia links under the _links.actions key that specify which messaging actions are allowed for the order.",
             "headers": {
-              "x-amzn-requestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -143,19 +147,43 @@
           "400": {
             "description": "Request has missing or invalid parameters and cannot be parsed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
             },
             "schema": {
               "$ref": "#/definitions/GetMessagingActionsForOrderResponse"
-            }
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    }
+                  }
+                },
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
+              }
+            ]
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -167,7 +195,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -179,7 +207,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -191,7 +223,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -203,7 +239,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -215,7 +255,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -227,7 +271,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -261,14 +309,64 @@
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/confirmCustomizationDetails": {
       "post": {
-        "description": "Sends a message asking a buyer to provide or verify customization details such as name spelling, images, initials, etc.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a message asking a buyer to provide or verify customization details such as name spelling, images, initials, etc.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "confirmCustomizationDetails",
         "tags": ["messaging"],
         "responses": {
           "201": {
             "description": "The message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateConfirmCustomizationDetailsResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "text": "My Message",
+                        "attachments": [
+                          {
+                            "uploadDestinationId": "4e936e26-7b72-4b84-af27-e6baee1d546d",
+                            "fileName": "AmazonMotors.txt"
+                          },
+                          {
+                            "uploadDestinationId": "4e936e26-7b72-4b84-af27-e6baee1d546d",
+                            "fileName": "AmazonMotors.txt"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -285,26 +383,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateConfirmCustomizationDetailsResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -316,7 +410,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -328,7 +422,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -340,7 +438,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -352,7 +454,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -364,7 +470,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -376,7 +486,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -406,26 +520,66 @@
             "maxItems": 1
           },
           {
-             "schema": {
-               "$ref": "#/definitions/CreateConfirmCustomizationDetailsRequest"
-             },
-             "in": "body",
-             "name": "body",
-             "required": true
-           }
+            "schema": {
+              "$ref": "#/definitions/CreateConfirmCustomizationDetailsRequest"
+            },
+            "in": "body",
+            "name": "body",
+            "required": true
+          }
         ]
       }
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/confirmDeliveryDetails": {
       "post": {
-        "description": "Sends a message to a buyer to arrange a delivery or to confirm contact information for making a delivery.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a message to a buyer to arrange a delivery or to confirm contact information for making a delivery.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createConfirmDeliveryDetails",
         "tags": ["messaging"],
         "responses": {
           "201": {
             "description": "The message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateConfirmDeliveryDetailsResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "text": "My Message"
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -442,26 +596,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateConfirmDeliveryDetailsResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -473,7 +623,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -485,7 +635,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -497,7 +651,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -509,7 +667,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -521,7 +683,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -533,7 +699,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -563,26 +733,75 @@
             "maxItems": 1
           },
           {
-             "schema": {
-               "$ref": "#/definitions/CreateConfirmDeliveryDetailsRequest"
-             },
-             "in": "body",
-             "name": "body",
-             "required": true
-           }
+            "schema": {
+              "$ref": "#/definitions/CreateConfirmDeliveryDetailsRequest"
+            },
+            "in": "body",
+            "name": "body",
+            "required": true
+          }
         ]
       }
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/legalDisclosure": {
       "post": {
-        "description": "Sends a critical message that contains documents that a seller is legally obligated to provide to the buyer. This message should only be used to deliver documents that are required by law.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a critical message that contains documents that a seller is legally obligated to provide to the buyer. This message should only be used to deliver documents that are required by law.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createLegalDisclosure",
         "tags": ["messaging"],
         "responses": {
           "201": {
             "description": "The legal disclosure message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateLegalDisclosureResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "attachments": [
+                          {
+                            "uploadDestinationId": "4e936e26-7b72-4b84-af27-e6baee1d546d",
+                            "fileName": "AmazonMotors.txt"
+                          },
+                          {
+                            "uploadDestinationId": "4e936e26-7b72-4b84-af27-e6baee1d546d",
+                            "fileName": "AmazonMotors.txt"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -599,26 +818,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateLegalDisclosureResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -630,7 +845,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -642,7 +857,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -654,7 +873,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -666,7 +889,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -678,7 +905,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -690,7 +921,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -732,14 +967,49 @@
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/negativeFeedbackRemoval": {
       "post": {
-        "description": "Sends a non-critical message that asks a buyer to remove their negative feedback. This message should only be sent after the seller has resolved the buyer's problem.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a non-critical message that asks a buyer to remove their negative feedback. This message should only be sent after the seller has resolved the buyer's problem.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createNegativeFeedbackRemoval",
         "tags": ["messaging"],
         "responses": {
           "201": {
             "description": "The negativeFeedbackRemoval message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateNegativeFeedbackRemovalResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -756,26 +1026,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateNegativeFeedbackRemovalResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -787,7 +1053,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -799,7 +1065,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -811,7 +1081,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -823,7 +1097,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -835,7 +1113,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -847,7 +1129,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -881,14 +1167,54 @@
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/confirmOrderDetails": {
       "post": {
-        "description": "Sends a message to ask a buyer an order-related question prior to shipping their order.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a message to ask a buyer an order-related question prior to shipping their order.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createConfirmOrderDetails",
         "tags": ["messaging"],
         "responses": {
           "201": {
             "description": "The message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateConfirmOrderDetailsResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "text": "My Message"
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -905,26 +1231,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateConfirmOrderDetailsResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -936,7 +1258,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -948,7 +1270,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -960,7 +1286,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -972,7 +1302,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -984,7 +1318,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -996,7 +1334,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1026,26 +1368,66 @@
             "maxItems": 1
           },
           {
-             "schema": {
-               "$ref": "#/definitions/CreateConfirmOrderDetailsRequest"
-             },
-             "in": "body",
-             "name": "body",
-             "required": true
-           }
+            "schema": {
+              "$ref": "#/definitions/CreateConfirmOrderDetailsRequest"
+            },
+            "in": "body",
+            "name": "body",
+            "required": true
+          }
         ]
       }
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/confirmServiceDetails": {
       "post": {
-        "description": "Sends a message to contact a Home Service customer to arrange a service call or to gather information prior to a service call.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a message to contact a Home Service customer to arrange a service call or to gather information prior to a service call.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createConfirmServiceDetails",
         "tags": ["messaging"],
         "responses": {
           "201": {
             "description": "The message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateConfirmServiceDetailsResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "text": "My Message"
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1062,26 +1444,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateConfirmServiceDetailsResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1093,7 +1471,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1105,7 +1483,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1117,7 +1499,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1129,7 +1515,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1141,7 +1531,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1153,7 +1547,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1183,26 +1581,71 @@
             "maxItems": 1
           },
           {
-             "schema": {
-               "$ref": "#/definitions/CreateConfirmServiceDetailsRequest"
-             },
-             "in": "body",
-             "name": "body",
-             "required": true
-           }
+            "schema": {
+              "$ref": "#/definitions/CreateConfirmServiceDetailsRequest"
+            },
+            "in": "body",
+            "name": "body",
+            "required": true
+          }
         ]
       }
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/amazonMotors": {
       "post": {
-        "description": "Sends a message to a buyer to provide details about an Amazon Motors order. This message can only be sent by Amazon Motors sellers.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a message to a buyer to provide details about an Amazon Motors order. This message can only be sent by Amazon Motors sellers.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "CreateAmazonMotors",
         "tags": ["messaging"],
         "responses": {
           "201": {
             "description": "The message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateAmazonMotorsResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "attachments": [
+                          {
+                            "uploadDestinationId": "4e936e26-7b72-4b84-af27-e6baee1d546d",
+                            "fileName": "AmazonMotors.txt"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1219,26 +1662,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateAmazonMotorsResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1250,7 +1689,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1262,7 +1701,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1274,7 +1717,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1286,7 +1733,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1298,7 +1749,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1310,7 +1765,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1352,14 +1811,61 @@
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/warranty": {
       "post": {
-        "description": "Sends a message to a buyer to provide details about warranty information on a purchase in their order.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a message to a buyer to provide details about warranty information on a purchase in their order.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "CreateWarranty",
         "tags": ["messaging"],
         "responses": {
           "201": {
             "description": "The message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateWarrantyResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "attachments": [
+                          {
+                            "uploadDestinationId": "8634452c-4d4f-4703-8cea-2ecc9dcb3279",
+                            "fileName": "warranty.txt"
+                          }
+                        ],
+                        "coverageStartDate": "2004-12-13T21:39:45.618-08:00",
+                        "coverageEndDate": "2005-12-13T21:39:45.618-08:00"
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1376,26 +1882,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateWarrantyResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1407,7 +1909,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1419,7 +1921,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1431,7 +1937,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1443,7 +1953,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1455,7 +1969,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1467,7 +1985,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1509,14 +2031,18 @@
     },
     "/messaging/v1/orders/{amazonOrderId}/attributes": {
       "get": {
-        "description": "Returns a response containing attributes related to an order. This includes buyer preferences.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |",
+        "description": "Returns a response containing attributes related to an order. This includes buyer preferences.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |",
         "operationId": "GetAttributes",
         "tags": ["messaging"],
         "responses": {
           "200": {
-            "description": "Response has successfully been returned",
+            "description": "Response has successfully been returned.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1534,11 +2060,10 @@
                   "parameters": {
                     "amazonOrderId": {
                       "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
                     }
-                  }
-                },
-                "request": {
-                  "parameters": {
                   }
                 },
                 "response": {
@@ -1555,7 +2080,11 @@
           "400": {
             "description": "Request has missing or invalid parameters and cannot be parsed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1580,7 +2109,15 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ],
             "schema": {
@@ -1590,7 +2127,7 @@
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1613,7 +2150,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1636,7 +2173,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1659,7 +2200,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1682,7 +2227,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1705,7 +2254,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1728,7 +2281,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1773,7 +2330,7 @@
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/digitalAccessKey": {
       "post": {
-        "description": "Sends a message to a buyer to share a digital access key needed to utilize digital content in their order.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a message to a buyer to share a digital access key needed to utilize digital content in their order.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createDigitalAccessKey",
         "tags": [
           "messaging"
@@ -1782,7 +2339,57 @@
           "201": {
             "description": "The message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateDigitalAccessKeyResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "text": "My Message",
+                        "attachments": [
+                          {
+                            "uploadDestinationId": "4e936e26-7b72-4b84-af27-e6baee1d546d",
+                            "fileName": "AmazonMotors.txt"
+                          },
+                          {
+                            "uploadDestinationId": "4e936e26-7b72-4b84-af27-e6baee1d546d",
+                            "fileName": "AmazonMotors.txt"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1799,26 +2406,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateDigitalAccessKeyResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1830,7 +2433,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1842,7 +2445,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1854,7 +2461,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1866,7 +2477,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1878,7 +2493,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1890,7 +2509,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1932,7 +2555,7 @@
     },
     "/messaging/v1/orders/{amazonOrderId}/messages/unexpectedProblem": {
       "post": {
-        "description": "Sends a critical message to a buyer that an unexpected problem was encountered affecting the completion of the order.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| .1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Sends a critical message to a buyer that an unexpected problem was encountered affecting the completion of the order.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 1 | 5 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createUnexpectedProblem",
         "tags": [
           "messaging"
@@ -1941,7 +2564,47 @@
           "201": {
             "description": "The message was created for the order.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
+                "description": "Unique request reference identifier.",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateUnexpectedProblemResponse"
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "amazonOrderId": {
+                      "value": "123-1234567-1234567"
+                    },
+                    "marketplaceIds": {
+                      "value": ["ATVPDKIKX0DER"]
+                    },
+                    "body": {
+                      "value": {
+                        "text": "My Message"
+                      }
+                    }
+                  }
+                },
+                "response": {}
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1958,26 +2621,22 @@
                     }
                   }
                 },
-                "response": {}
+                "response": {
+                  "errors": [
+                    {
+                      "code": "InvalidInput",
+                      "message": "Invalid Input",
+                      "details": ""
+                    }
+                  ]
+                }
               }
             ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "headers": {
-              "x-amzn-RequestId": {
-                "description": "Unique request reference identifier.",
-                "type": "string"
-              }
-            },
-            "schema": {
-              "$ref": "#/definitions/CreateUnexpectedProblemResponse"
-            }
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -1989,7 +2648,7 @@
           "404": {
             "description": "The resource specified does not exist.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -2001,7 +2660,11 @@
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -2013,7 +2676,11 @@
           "415": {
             "description": "The request payload is in an unsupported format.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -2025,7 +2692,11 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -2037,7 +2708,11 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -2049,7 +2724,11 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "headers": {
-              "x-amzn-RequestId": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-requestid": {
                 "description": "Unique request reference identifier.",
                 "type": "string"
               }
@@ -2247,7 +2926,7 @@
       "type": "object",
       "properties": {
         "text": {
-          "description": "The text to be sent to the buyer. Only links related to customization details are allowed. Do not include HTML or email addresses.",
+          "description": "The text to be sent to the buyer. Only links related to customization details are allowed. Do not include HTML or email addresses. The text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "type": "string",
           "minLength": 1,
           "maxLength": 800
@@ -2276,7 +2955,7 @@
       "type": "object",
       "properties": {
         "text": {
-          "description": "The text to be sent to the buyer. Only links related to order delivery are allowed. Do not include HTML or email addresses.",
+          "description": "The text to be sent to the buyer. Only links related to order delivery are allowed. Do not include HTML or email addresses. The text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "type": "string",
           "minLength": 1,
           "maxLength": 2000
@@ -2307,7 +2986,7 @@
       "properties": {
         "attachments": {
           "type": "array",
-          "description": "Attachments to include in the message to the buyer.",
+          "description": "Attachments to include in the message to the buyer. If any text is included in the attachment, the text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "maxLength": 5,
           "items": {
             "$ref": "#/definitions/Attachment"
@@ -2329,7 +3008,7 @@
       "type": "object",
       "properties": {
         "text": {
-          "description": "The text to be sent to the buyer. Only links related to order completion are allowed. Do not include HTML or email addresses.",
+          "description": "The text to be sent to the buyer. Only links related to order completion are allowed. Do not include HTML or email addresses. The text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "type": "string",
           "minLength": 1,
           "maxLength": 2000
@@ -2350,7 +3029,7 @@
       "type": "object",
       "properties": {
         "text": {
-          "description": "The text to be sent to the buyer. Only links related to Home Service calls are allowed. Do not include HTML or email addresses.",
+          "description": "The text to be sent to the buyer. Only links related to Home Service calls are allowed. Do not include HTML or email addresses. The text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "type": "string",
           "minLength": 1,
           "maxLength": 2000
@@ -2372,7 +3051,7 @@
       "properties": {
         "attachments": {
           "type": "array",
-          "description": "Attachments to include in the message to the buyer.",
+          "description": "Attachments to include in the message to the buyer. If any text is included in the attachment, the text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "maxLength": 5,
           "items": {
             "$ref": "#/definitions/Attachment"
@@ -2395,7 +3074,7 @@
       "properties": {
         "attachments": {
           "type": "array",
-          "description": "Attachments to include in the message to the buyer.",
+          "description": "Attachments to include in the message to the buyer. If any text is included in the attachment, the text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "maxLength": 5,
           "minLength": 1,
           "items": {
@@ -2403,12 +3082,12 @@
           }
         },
         "coverageStartDate": {
-          "description": "The start date of the warranty coverage to include in the message to the buyer",
+          "description": "The start date of the warranty coverage to include in the message to the buyer.",
           "type": "string",
           "format": "date-time"
         },
         "coverageEndDate": {
-          "description": "The end date of the warranty coverage to include in the message to the buyer",
+          "description": "The end date of the warranty coverage to include in the message to the buyer.",
           "type": "string",
           "format": "date-time"
         }
@@ -2447,7 +3126,7 @@
       "type": "object",
       "properties": {
         "text": {
-          "description": "The text to be sent to the buyer. Only links related to the digital access key are allowed. Do not include HTML or email addresses.",
+          "description": "The text to be sent to the buyer. Only links related to the digital access key are allowed. Do not include HTML or email addresses. The text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "type": "string",
           "minLength": 1,
           "maxLength": 400
@@ -2476,7 +3155,7 @@
       "type": "object",
       "properties": {
         "text": {
-          "description": "The text to be sent to the buyer. Only links related to unexpected problem calls are allowed. Do not include HTML or email addresses.",
+          "description": "The text to be sent to the buyer. Only links related to unexpected problem calls are allowed. Do not include HTML or email addresses. The text must be written in the buyer's language of preference, which can be retrieved from the GetAttributes operation.",
           "type": "string",
           "minLength": 1,
           "maxLength": 2000
